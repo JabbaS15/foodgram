@@ -66,7 +66,7 @@ class Recipe(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name='recipes',
-        verbose_name='Рецепты',
+        verbose_name='Автор',
     )
     name = models.CharField(
         max_length=200,
@@ -84,11 +84,13 @@ class Recipe(models.Model):
         CustomUser,
         verbose_name='Понравившиеся рецепты',
         related_name='is_favorited',
+        blank=True,
     )
     is_in_shopping_cart = models.ManyToManyField(
         CustomUser,
         related_name='is_in_shopping_cart',
         verbose_name='Список покупок',
+        blank=True,
     )
     ingredients = models.ManyToManyField(
         Ingredients,

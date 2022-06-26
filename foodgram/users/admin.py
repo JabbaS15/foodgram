@@ -11,7 +11,8 @@ class MyUserAdmin(UserAdmin):
     )
     fields = (
         ('username', 'email', ),
-        ('first_name', 'last_name', ),
+        ('first_name', 'last_name', 'password'),
+        ('is_subscribed', )
     )
     fieldsets = []
 

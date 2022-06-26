@@ -12,21 +12,21 @@ class CustomUser(AbstractUser):
         validators=[MinLengthValidator(5, message='Минимум 5 символов')]
     )
     email = models.EmailField('Email адрес', max_length=254, unique=True)
-    password = models.CharField('Пароль', max_length=150)
     first_name = models.CharField('Имя', max_length=150)
     last_name = models.CharField('Фамилия', max_length=15)
     is_subscribed = models.ManyToManyField(
         to='self',
         verbose_name='Подписка',
         related_name='subscribers',
-        symmetrical=False
+        symmetrical=False,
+        blank=True,
     )
 
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
         verbose_name = 'Пользователь'

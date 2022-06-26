@@ -1,24 +1,21 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt import views
 
-from api.views import TagViewSet, RecipesViewSet, IngredientsViewSet
+from api.views import TagViewSet, RecipesViewSet, IngredientsViewSet, ChangePasswordViewSet
 from users.views import UserViewSet
 
 app_name = 'api'
-router_v1 = DefaultRouter()
-router_v1.register(r'users', UserViewSet, basename='users')
-router_v1.register(r'tags', TagViewSet, basename='tags')
-router_v1.register(r'recipes', RecipesViewSet, basename='recipes')
-router_v1.register(r'ingredients', IngredientsViewSet, basename='ingredients')
+router = DefaultRouter()
+router.register(r'users', UserViewSet, basename='users')
+router.register(r'tags', TagViewSet, basename='tags')
+router.register(r'recipes', RecipesViewSet, basename='recipes')
+router.register(r'ingredients', IngredientsViewSet, basename='ingredients')
+
 
 urlpatterns = (
-    path('v1/', include(router_v1.urls)),
-    path('auth/token/login/', views.TokenObtainPairView.as_view(),
-         name='token_create'),
-
+    path('', include(router.urls)),
+    path(r'set_password/', ChangePasswordViewSet.as_view(), name='set_password'),
+    path(r'auth/', include('djoser.urls.authtoken')),
 )
 
-# path('auth/token/login/', views.TokenRefreshView.as_view(),
-#      name='token_refresh'),
-# path('auth/token/login/', views.TokenVerifyView.as_view(), name='token_verify')
+

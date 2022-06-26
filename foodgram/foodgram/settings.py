@@ -21,27 +21,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.'
-                                'PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.UserRateThrottle',
-        'rest_framework.throttling.AnonRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'user': '1000/day',
-        'anon': '100/day',
-    },
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=14),
-    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 INSTALLED_APPS = [
@@ -54,6 +35,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'food.apps.FoodConfig',
     'api.apps.ApiConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
     'djoser',
     'django_filters',
 
@@ -90,21 +73,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DB_NAME', default='postgres'),
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('PASSWORD', default=''),
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': 'postgres',
+        'PASSWORD': os.getenv('PASSWORD', default='6269142'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
