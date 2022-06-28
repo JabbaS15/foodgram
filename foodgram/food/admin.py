@@ -36,30 +36,33 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'id', 'name', 'author', 'get_image',
+        'id', 'name', 'author', 'pub_date', 'count_in_favourites'
     )
     fields = (
         ('name', 'cooking_time',),
         ('author', 'tags',),
         ('text',),
-        ('image',),
     )
     raw_id_fields = ('author', )
     search_fields = (
-        'name', 'author',
+        'name',
+        'author',
+        'tags',
     )
     list_filter = (
-        'name', 'author__username',
+        'name',
+        'author__username',
+        'tags__slug',
     )
 
     inlines = (IngredientInline,)
     save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
 
-    def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
+    def count_in_favourites(self, obj):
+        return obj.is_favorited.all().count()
 
-    get_image.short_description = 'Изображение'
+    count_in_favourites.short_description = 'Общее число в избранном.'
 
 
 @register(Tag)

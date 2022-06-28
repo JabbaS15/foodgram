@@ -6,15 +6,15 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    default='11-!aq$hqk(bjga@o)&l)!_7oaxp!y-$zwffci=y@3$fhh0-$q'
+)
 
-SECRET_KEY = '11-!aq$hqk(bjga@o)&l)!_7oaxp!y-$zwffci=y@3$fhh0-$q'
+DEBUG = os.environ.get('DEBUG', default=True)
 
-DEBUG = True
-
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS',
+                          default='localhost 127.0.0.1').split(' ')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -83,6 +83,13 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

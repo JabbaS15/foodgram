@@ -78,7 +78,6 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Картинка',
         upload_to='food/',
-        blank=True,
     )
     is_favorited = models.ManyToManyField(
         CustomUser,
@@ -130,7 +129,7 @@ class RecipeIngredients(models.Model):
         related_name='recipe',
         on_delete=models.CASCADE,
     )
-    ingredients = models.ForeignKey(
+    ingredient = models.ForeignKey(
         Ingredients,
         on_delete=models.CASCADE,
         verbose_name='Ингредиенты в связке',
@@ -147,5 +146,5 @@ class RecipeIngredients(models.Model):
         ordering = ('recipe', )
 
     def __str__(self):
-        return f'{self.amount} {self.ingredients}'
+        return f'{self.amount} {self.ingredient}'
 
