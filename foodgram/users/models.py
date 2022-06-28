@@ -34,34 +34,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f'{self.username}, {self.email}'
-
-
-class Follow(models.Model):
-    """Модель подписок."""
-    user = models.ForeignKey(
-        CustomUser,
-        verbose_name='Пользователь',
-        on_delete=models.CASCADE,
-        related_name='follower',
-    )
-    following = models.ForeignKey(
-        CustomUser,
-        verbose_name='Автор',
-        on_delete=models.CASCADE,
-        related_name='following',
-    )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'following'],
-                name='unique_following'
-            ),
-            models.CheckConstraint(
-                check=~models.Q(user=models.F("following")),
-                name="prevent_self_following",
-            ),
-        ]
-
-    def __str__(self):
-        return f'{self.user} {self.following}'

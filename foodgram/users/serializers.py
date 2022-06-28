@@ -53,4 +53,9 @@ class UserSerializer(serializers.ModelSerializer):
         if value.lower() == 'me':
             raise serializers.ValidationError(
                 f'Имя {value} не может быть использованно')
-        return value
+        if not value.isaplha():
+            raise serializers.ValidationError(
+                'В username допустимы только буквы.'
+            )
+        return value.capitalize()
+
