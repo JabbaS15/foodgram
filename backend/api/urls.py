@@ -12,11 +12,9 @@ router.register(r'tags', TagViewSet, basename='tags')
 router.register(r'recipes', RecipesViewSet, basename='recipes')
 router.register(r'ingredients', IngredientsViewSet, basename='ingredients')
 
-
 urlpatterns = (
     path('', include(router.urls)),
-    path(r'set_password/', ChangePasswordViewSet.as_view(), name='set_password'),
+    path(r'set_password/', ChangePasswordViewSet.as_view(),
+         name='set_password'),
     path(r'auth/', include('djoser.urls.authtoken')),
 )
-
-

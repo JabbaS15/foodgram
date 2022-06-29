@@ -58,4 +58,3 @@ class UserSerializer(serializers.ModelSerializer):
                 'В username допустимы только буквы.'
             )
         return value.capitalize()
-

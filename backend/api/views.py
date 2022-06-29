@@ -9,10 +9,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.filters import IngredientsFilter
+from api.filters import IngredientsFilter, RecipesFilter
 from api.pagination import CustomPagination
 from api.permissions import AdminOnly, ReadOnly, AuthorOrReadOnly
 from api.serializers import TagSerializer, \
@@ -36,7 +36,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
     permission_classes = [ReadOnly | AdminOnly]
-    filter_backends = [DjangoFilterBackend, ]
+    filter_backends = (DjangoFilterBackend, )
     filterset_class = IngredientsFilter
 
 
@@ -46,6 +46,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
     permission_classes = [AuthorOrReadOnly | AdminOnly]
     add_serializer = SubscriptionsRecipeSerializer
     pagination_class = CustomPagination
+
+    filterset_class = RecipesFilter
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:

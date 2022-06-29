@@ -1,5 +1,4 @@
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
-from django.utils.safestring import mark_safe
 
 from food.models import Tag, Ingredients, Recipe, RecipeIngredients
 

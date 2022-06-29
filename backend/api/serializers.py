@@ -236,4 +236,3 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 recipe=instance, ingredient=ingredient['id'],
                 amount=ingredient['amount'])
         return super().update(instance, validated_data)
-
