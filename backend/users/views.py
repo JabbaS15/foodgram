@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -6,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 from api.serializers import UserSubscriptionSerializer
+from api.utils import FilterDataset
 from users.models import CustomUser
 from users.serializers import UserSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet, FilterDataset):
     """CRUD user models."""
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -22,9 +22,9 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
-        methods=('GET', 'PUT', 'PATCH', ),
+        methods=('GET', 'PUT', 'PATCH',),
         detail=False,
-        permission_classes=(IsAuthenticated, ),
+        permission_classes=(IsAuthenticated,),
         url_path='subscribe'
     )
     def me(self, request):
@@ -41,33 +41,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         methods=('GET', 'POST', 'DELETE',),
         detail=True,
-        permission_classes=(IsAuthenticated, ),
+        permission_classes=(IsAuthenticated,),
         url_path='subscribe'
     )
     def subscribe(self, request, pk):
         """Создаёт/удалет связь между пользователями."""
-        user = self.request.user
-
-        if user.is_anonymous:
-            return Response(status=HTTP_401_UNAUTHORIZED)
-
-        subscribed = user.is_subscribed
-        obj = get_object_or_404(self.queryset, id=pk)
-        serializer = self.add_serializer(
-            obj, context={'request': self.request})
-        obj_exist = subscribed.filter(id=pk).exists()
-
-        if (self.request.method in ('GET', 'POST',)) and not obj_exist:
-            subscribed.add(obj)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if (self.request.method in ('DELETE',)) and obj_exist:
-            subscribed.remove(obj)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self.obj_favorite_cart_subscribe(request, pk, self.SUBSCRIBE)
 
     @action(
-        methods=('GET', ),
+        methods=('GET',),
         detail=False,
         permission_classes=(IsAuthenticated,),
         url_path='subscriptions'
@@ -82,3 +64,47 @@ class UserViewSet(viewsets.ModelViewSet):
             authors, many=True, context={'request': request}
         )
         return Response(serializer.data)
+
+    @action(
+        methods=('POST',),
+        detail=False,
+        permission_classes=(IsAuthenticated,),
+        url_path='set_password'
+    )
+    def set_password(self, request):
+        """Обновление пароля"""
+        if 'new_password' or 'current_password' not in request.data:
+            return Response(
+                data={'error': [
+                    'поля "new_password" и '
+                    '"current_password" обязательны к заполнению'
+                ]},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if request.data['new_password'] == request.data['current_password']:
+            return Response(
+                data={'error': [
+                    "'new_password' и 'current_password' не совпадают"
+                ]},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if request.user.check_password(request.data['new_password']):
+            return Response(
+                data={
+                    'new_password': ['Проверьте правильность ввода']
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not request.user.check_password(request.data['current_password']):
+            return Response(
+                data={
+                    'current_password': ['Проверьте правильность ввода']
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        request.user.set_password(request.data['new_password'])
+        request.user.save()
+        return Response(
+            data=request.data,
+            status=status.HTTP_201_CREATED
+        )

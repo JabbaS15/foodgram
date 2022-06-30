@@ -4,7 +4,10 @@ from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+PAGE_SIZE = 6
+
 load_dotenv()
+
 SECRET_KEY = os.getenv(
     'SECRET_KEY',
     default='11-!aq$hqk(bjga@o)&l)!_7oaxp!y-$zwffci=y@3$fhh0-$q'

@@ -1,24 +1,21 @@
-from datetime import datetime
-
-from django.contrib.auth.password_validation import validate_password
-from django.core import exceptions
-from django.db.models import Sum, F
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
-from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.filters import IngredientsFilter, RecipesFilter
 from api.pagination import CustomPagination
 from api.permissions import AdminOnly, ReadOnly, AuthorOrReadOnly
-from api.serializers import TagSerializer, \
-    IngredientsSerializer, ChangePasswordSerializer, \
-    SubscriptionsRecipeSerializer, ListRecipeSerializer, CreateRecipeSerializer
-from food.models import Tag, Ingredients, Recipe, RecipeIngredients
+from api.serializers import (
+    TagSerializer,
+    IngredientsSerializer,
+    SubscriptionsRecipeSerializer,
+    ListRecipeSerializer,
+    CreateRecipeSerializer
+)
+from api.utils import FilterDataset
+from food.models import Tag, Ingredients, Recipe
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -40,7 +37,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     filterset_class = IngredientsFilter
 
 
-class RecipesViewSet(viewsets.ModelViewSet):
+class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     """Возвращает из БД и создает рецепты"""
     queryset = Recipe.objects.all()
     permission_classes = [AuthorOrReadOnly | AdminOnly]
@@ -102,25 +99,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
         url_path='favorite'
     )
     def favorite(self, request, pk):
-        """Работает со списком избранных."""
-        user = self.request.user
-        if user.is_anonymous:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        favorite = user.is_favorited
-        obj = get_object_or_404(self.queryset, id=pk)
-        serializer = self.add_serializer(
-            obj, context={'request': self.request})
-        obj_exist = favorite.filter(id=pk).exists()
-
-        if (self.request.method in ('GET', 'POST',)) and not obj_exist:
-            favorite.add(obj)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if (self.request.method in ('DELETE',)) and obj_exist:
-            favorite.remove(obj)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        """Работает со списком избранных и со списком покупок."""
+        return self.obj_favorite_cart_subscribe(request, pk, self.FAVORITE)
 
     @action(
         methods=('GET', 'POST', 'DELETE',),
@@ -130,24 +110,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk):
         """Работает со списком покупок."""
-        user = self.request.user
-        if user.is_anonymous:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        cart = user.is_in_shopping_cart
-        obj = get_object_or_404(self.queryset, id=pk)
-        serializer = self.add_serializer(
-            obj, context={'request': self.request})
-        obj_exist = cart.filter(id=pk).exists()
-
-        if (self.request.method in ('GET', 'POST',)) and not obj_exist:
-            cart.add(obj)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if (self.request.method in ('DELETE',)) and obj_exist:
-            cart.remove(obj)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self.obj_favorite_cart_subscribe(request, pk, self.CART)
 
     @action(
         methods=['get'],
@@ -157,60 +120,4 @@ class RecipesViewSet(viewsets.ModelViewSet):
     )
     def download_shopping_cart(self, request):
         """Загружает файл *.txt со списком покупок."""
-        user = self.request.user
-
-        if not user.is_in_shopping_cart.exists():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        ingredients = RecipeIngredients.objects.filter(
-            recipe__in=(user.is_in_shopping_cart.values('id'))
-        ).values(
-            ingredient=F('ingredient__name'),
-            measurement_unit=F('ingredient__measurement_unit')).annotate(
-            amount=Sum('amount')
-        )
-        filename = f'{user.username}_shopping_list.txt'
-        shopping_list = (
-            f'Список покупок для: {user.first_name}'
-            f'{datetime.now().strftime("shopping_cart")}'
-        )
-        for ingredient in ingredients:
-            shopping_list += (
-                f'{ingredient["ingredient"]}: '
-                f'{ingredient["amount"]} {ingredient["measure"]}')
-        response = HttpResponse(
-            shopping_list, content_type='text.txt; charset=utf-8')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-        return response
-
-
-class ChangePasswordViewSet(UpdateAPIView):
-    """Обновление пароля"""
-    serializer_class = ChangePasswordSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            try:
-                new_password = serializer.data.get("new_password")
-                if new_password != serializer.data.get("current_password"):
-                    return Response(
-                        {"Error": ["Проверьте правильность ввода паролей"]},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-                validate_password(new_password, self.request.user)
-                self.object.set_password(new_password)
-                self.object.save()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            except exceptions.ValidationError as error:
-                return Response(
-                    {'status': error}, status=status.HTTP_400_BAD_REQUEST
-                )
-        return Response(serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
+        return self.download_shopping_cart_txt(request)

@@ -45,7 +45,10 @@ class SubscriptionsRecipeSerializer(serializers.ModelSerializer):
 class UserSubscriptionSerializer(UserSerializer):
     """Сериализатор для эндпоинта /subscriptions."""
     recipes = SubscriptionsRecipeSerializer(many=True, read_only=True)
-    recipes_count = SerializerMethodField()
+    recipes_count = serializers.IntegerField(
+        source='recipes.count',
+        read_only=True
+    )
 
     class Meta:
         model = CustomUser
@@ -59,11 +62,16 @@ class UserSubscriptionSerializer(UserSerializer):
             'recipes',
             'recipes_count',
         )
-        read_only_fields = '__all__',
-
-    @staticmethod
-    def get_recipes_count(obj):
-        return obj.recipes.count()
+        read_only_fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
@@ -206,33 +214,53 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             })
         return data
 
+    def create_ingredients(self, ingredients, recipe, menu_list):
+        for ingredient in ingredients:
+            recipe_list = RecipeIngredients(
+                recipe=recipe,
+                ingredient=ingredient['id'],
+                amount=ingredient['amount']
+            )
+            menu_list.append(recipe_list)
+
+    def create_tags(self, tags, recipe):
+        for tag in tags:
+            recipe.tags.add(tag)
+
     def create(self, validated_data):
         """Создаёт рецепт."""
+        menu_list = []
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(author=self.context.get('request').user,
-                                       **validated_data)
-        recipe.tags.set(tags)
-        recipe.save()
-        for i in ingredients:
-            ingredient = i.pop('id')
-            RecipeIngredients.objects.create(
-                recipe=recipe,
-                ingredient=ingredient,
-                **i
-            )
+        recipe = Recipe.objects.create(
+            author=self.context.get('request').user, **validated_data)
+        self.create_tags(
+            tags,
+            recipe
+        )
+        self.create_ingredients(
+            ingredients,
+            recipe,
+            menu_list
+        )
+        RecipeIngredients.objects.bulk_create(menu_list)
+
         return recipe
 
     def update(self, instance, validated_data):
         """Обновляет рецепт."""
+        menu_list = []
         instance.tags.clear()
         RecipeIngredients.objects.filter(recipe=instance).all().delete()
-        tags = validated_data.pop('tags')
-        for tag in tags:
-            instance.tags.add(tag)
-        ingredients = validated_data.pop('ingredients')
-        for ingredient in ingredients:
-            RecipeIngredients.objects.create(
-                recipe=instance, ingredient=ingredient['id'],
-                amount=ingredient['amount'])
+        self.create_tags(
+            validated_data.pop('tags'),
+            instance
+        )
+        self.create_ingredients(
+            validated_data.pop('ingredients'),
+            instance,
+            menu_list
+        )
+        RecipeIngredients.objects.bulk_create(menu_list)
+
         return super().update(instance, validated_data)
