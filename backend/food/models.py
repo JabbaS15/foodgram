@@ -116,6 +116,12 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=['author', 'name'],
+                name='unique_author_name'
+            ),
+        )
 
     def __str__(self):
         return f'{self.author}, {self.name}'
@@ -144,6 +150,12 @@ class RecipeIngredients(models.Model):
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Количество ингридиентов'
         ordering = ('recipe', )
+        constraints = (
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient',),
+                name='unique_recipe_ingredient',
+            ),
+        )
 
     def __str__(self):
         return f'{self.amount} {self.ingredient}'

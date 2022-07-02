@@ -11,7 +11,7 @@ from rest_framework.fields import ImageField
 
 
 class Base64FieldMixin(object):
-    """drf-extra-fields.fields к сожалению не импортируется ко мне"""
+    """drf-extra-fields.fields, Конвертирует картинку в base64."""
     EMPTY_VALUES = (None, "", [], (), {})
 
     @property

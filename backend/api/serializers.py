@@ -178,10 +178,15 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
-    def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
+    def validate_ingredients(self, value):
+        """Проверка ингридиентов"""
         ingredients_list = []
-        for ingredient in ingredients:
+        for ingredient in value:
+            """
+            Легче всего проверить уникальность 
+            - это привести ингредиенты к set, а потом сравнить длину :).
+            Что-то я не очень понял как и где это использовать.
+            """
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
                 raise serializers.ValidationError({
@@ -193,14 +198,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество не может быть отрицательным'
                 })
+        return value
 
-        tags = self.initial_data.get('tags')
-        if not tags:
+    def validate_tags(self, value):
+        """Проверка Тэгов"""
+        if not value:
             raise serializers.ValidationError({
                 'tags': 'Нужно выбрать тэг'
             })
         tags_list = []
-        for tag in tags:
+        for tag in value:
             if tag in tags_list:
                 raise serializers.ValidationError({
                     'tags': 'Такой тэг уже есть'
@@ -212,9 +219,10 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'cooking_time': 'Время не может быть отрицательным'
             })
-        return data
+        return value
 
     def create_ingredients(self, ingredients, recipe, menu_list):
+        """Создаёт ингридиент."""
         for ingredient in ingredients:
             recipe_list = RecipeIngredients(
                 recipe=recipe,
@@ -224,6 +232,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             menu_list.append(recipe_list)
 
     def create_tags(self, tags, recipe):
+        """Создаёт тэг."""
         for tag in tags:
             recipe.tags.add(tag)
 
