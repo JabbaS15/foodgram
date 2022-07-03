@@ -1,6 +1,6 @@
 # Foodgram
 
-![example workflow](https://github.com/JabbaS15/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)
+![example workflow](https://github.com/JabbaS15/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 ![django version](https://img.shields.io/badge/Django-3.2.13-green)
 ![python version](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-green)
 ## Описание проетка [jabba.ddns.net](http://127.0.0.1:8000/api/):

@@ -93,7 +93,8 @@ jobs:
             key: ${{ secrets.SSH_KEY }}
             passphrase: ${{ secrets.PASSPHRASE }}
             script: |
-              sudo docker pull jabbas15/yamdb_final:latest
+              sudo docker pull jabbas15/foodgram_frontend:latest
+              sudo docker pull jabbas15/foodgram_backend:latest
               sudo docker-compose stop
               sudo docker-compose rm web
               touch .env
@@ -104,8 +105,6 @@ jobs:
               echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
               echo DB_HOST=${{ secrets.DB_HOST }} >> .env
               echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-              echo EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }} >> .env
-              echo EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }} >> .env
               sudo docker-compose up -d
   send_message:
     name: Telegram Message
