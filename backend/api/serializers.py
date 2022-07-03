@@ -120,9 +120,8 @@ class ListRecipeSerializer(serializers.ModelSerializer):
 
     def get_ingredients(self, obj):
         """Получает список ингридиентов для рецепта."""
-        ingredients = obj.ingredients.values('id', 'name', 'measurement_unit',
-                                             amount=F('ingredient__amount'))
-        return ingredients
+        return obj.ingredients.values('id', 'name', 'measurement_unit',
+                                      amount=F('ingredient__amount'))
 
     def get_image(self, obj):
         if self.context.get('request').is_secure():
