@@ -8,14 +8,14 @@ from api.filters import IngredientsFilter, RecipesFilter
 from api.pagination import CustomPagination
 from api.permissions import AdminOnly, ReadOnly, AuthorOrReadOnly
 from api.serializers import (
-    TagSerializer,
+    CreateRecipeSerializer,
     IngredientsSerializer,
-    SubscriptionsRecipeSerializer,
     ListRecipeSerializer,
-    CreateRecipeSerializer
+    SubscriptionsRecipeSerializer,
+    TagSerializer
 )
 from api.utils import FilterDataset
-from food.models import Tag, Ingredients, Recipe
+from food.models import Ingredients, Recipe, Tag
 
 
 class TagViewSet(viewsets.ModelViewSet):

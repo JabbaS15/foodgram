@@ -11,6 +11,7 @@ from users.serializers import UserSerializer
 
 class TagSerializer(serializers.ModelSerializer):
     """Сериализатор для тэгов"""
+
     class Meta:
         model = Tag
         fields = ('id', 'name', 'slug', 'color')
@@ -18,6 +19,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IngredientsSerializer(serializers.ModelSerializer):
     """Сериализатор для ингридиентов."""
+
     class Meta:
         model = Ingredients
         fields = ('id', 'name', 'measurement_unit')

@@ -1,6 +1,5 @@
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
-
-from food.models import Tag, Ingredients, Recipe, RecipeIngredients
+from food.models import Ingredients, Recipe, RecipeIngredients, Tag
 
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'

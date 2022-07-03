@@ -1,11 +1,10 @@
+from api.serializers import UserSubscriptionSerializer
+from api.utils import FilterDataset
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
-
-from api.serializers import UserSubscriptionSerializer
-from api.utils import FilterDataset
 from users.models import CustomUser
 from users.serializers import UserSerializer
 
