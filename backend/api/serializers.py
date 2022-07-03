@@ -182,13 +182,12 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         """Проверка ингридиентов"""
         ingredients_list = []
         for ingredient in value:
-
-            # ingredient_id = ingredient['id']
-            # if ingredient_id in ingredients_list:
-            #     raise serializers.ValidationError({
-            #         'ingredients': 'Такой ингредиент уже выбран'
-            #     })
-            # ingredients_list.append(ingredient_id)
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
+                raise serializers.ValidationError({
+                    'ingredients': 'Такой ингредиент уже выбран'
+                })
+            ingredients_list.append(ingredient_id)
             amount = ingredient['amount']
             if int(amount) <= 0:
                 raise serializers.ValidationError({
