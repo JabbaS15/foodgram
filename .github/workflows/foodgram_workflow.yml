@@ -52,7 +52,7 @@ jobs:
   build_push_backend_to_DockerHub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    needs: build_push_frontend_to_DockerHub
+    needs: tests
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Check out the repo
@@ -76,7 +76,10 @@ jobs:
   deploy:
       name: Deploy
       runs-on: ubuntu-latest
-      needs: build_push_backend_to_DockerHub
+      needs: [
+        build_push_backend_to_DockerHub,
+        build_push_frontend_to_DockerHub
+      ]
       steps:
         - name: executing remote ssh commands to deploy
           uses: appleboy/ssh-action@master
