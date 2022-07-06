@@ -46,7 +46,6 @@ jobs:
         with:
           context: frontend/
           push: true
-          file: ./Dockerfile
           tags: jabbas15/foodgram_frontend:latest
 
       - name: Push "backend" to DockerHub
