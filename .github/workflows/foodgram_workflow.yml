@@ -53,7 +53,6 @@ jobs:
         with:
           context: backend/
           push: true
-          file: ./Dockerfile
           tags: jabbas15/foodgram_backend:latest
 
   deploy:
