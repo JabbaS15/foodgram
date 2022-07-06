@@ -188,12 +188,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество не может быть отрицательным'
                 })
-            ingredient_id = ingredient.get('id')
-            if ingredient_id in ingredients_set:
-                raise serializers.ValidationError({
-                    'ingredients': 'Такой ингредиент уже выбран'
-                })
-            ingredients_set.add(ingredient_id)
+            ingredients_set.add(ingredient['id'])
+        if len(ingredients_set) != len(ingredients):
+            raise serializers.ValidationError({
+                'ingredients': 'Такой ингредиент уже выбран'
+            })
         return value
 
     def validate_tags(self, value):
@@ -209,11 +208,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         tags = self.initial_data.get('tags')
         tags_set = set()
         for tag in tags:
-            if tag in tags_set:
-                raise serializers.ValidationError({
-                    'tags': 'Такой тэг уже есть'
-                })
             tags_set.add(tag)
+        if len(tags_set) != len(tags):
+            raise serializers.ValidationError({
+                'tags': 'Такой тэг уже есть'
+            })
         return value
 
     def create_ingredients(self, ingredients, recipe, menu_list):
@@ -226,11 +225,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             )
             menu_list.append(recipe_list)
 
-    def create_tags(self, tags, recipe):
-        """Создаёт тэг."""
-        for tag in tags:
-            recipe.tags.add(tag)
-
     def create(self, validated_data):
         """Создаёт рецепт."""
         menu_list = []
@@ -238,10 +232,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(
             author=self.context.get('request').user, **validated_data)
-        self.create_tags(
-            tags,
-            recipe
-        )
+        recipe.tags.set(tags)
         self.create_ingredients(
             ingredients,
             recipe,
