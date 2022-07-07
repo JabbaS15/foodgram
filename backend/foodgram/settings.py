@@ -90,7 +90,7 @@ else:
             'NAME': os.getenv('DB_NAME', default='postgres'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('HOST', default='127.0.0.1'),
+            'HOST': os.getenv('HOST'),
             'PORT': os.getenv('DB_PORT'),
         }
     }
