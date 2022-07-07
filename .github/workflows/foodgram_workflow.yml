@@ -71,7 +71,8 @@ jobs:
               sudo docker pull jabbas15/foodgram_frontend:latest
               sudo docker pull jabbas15/foodgram_backend:latest
               sudo docker-compose stop
-              sudo docker-compose rm web
+              sudo docker rm foodgram_frontend
+              sudo docker rm foodgram_backend
               touch .env
               echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
               echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
