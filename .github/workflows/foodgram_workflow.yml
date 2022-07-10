@@ -73,7 +73,9 @@ jobs:
               sudo docker-compose stop
               sudo docker rm foodgram_frontend
               sudo docker rm foodgram_backend
+              rm .env
               touch .env
+              echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
               echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
               echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
               echo DB_NAME=${{ secrets.DB_NAME }} >> .env
