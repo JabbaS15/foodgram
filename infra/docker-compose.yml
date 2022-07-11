@@ -14,7 +14,7 @@ services:
     image: jabbas15/foodgram_backend:latest
     restart: always
     volumes:
-      - static_value:/app/backend_static/
+      - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
       - db
