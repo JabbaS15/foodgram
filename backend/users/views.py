@@ -24,7 +24,7 @@ class UserViewSet(viewsets.ModelViewSet, FilterDataset):
         methods=('GET', 'PUT', 'PATCH',),
         detail=False,
         permission_classes=(IsAuthenticated,),
-        url_path='subscribe'
+        url_path='me'
     )
     def me(self, request):
         """API для редактирования текущим пользователем своих данных."""
