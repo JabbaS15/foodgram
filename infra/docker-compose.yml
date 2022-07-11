@@ -2,18 +2,15 @@ version: '3.3'
 services:
 
   db:
+    container_name: db
     image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env
-
-  frontend:
-    image: jabbas15/foodgram_frontend:latest
-    volumes:
-      - ./frontend/:/app/result_build/
+      - .env
 
   backend:
+    container_name: backend
     image: jabbas15/foodgram_backend:latest
     restart: always
     volumes:
@@ -22,9 +19,19 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
+      - .env
+
+  frontend:
+    container_name: frontend
+    image: jabbas15/foodgram_frontend:latest
+    volumes:
+      - ./frontend/:/app/result_build/
+    depends_on:
+      - backend
+
 
   nginx:
+    container_name: nginx
     image: nginx:1.21.3-alpine
     ports:
       - "80:80"
@@ -38,6 +45,6 @@ services:
       - backend
 
 volumes:
+  postgres_data:
   static_value:
   media_value:
-  postgres_data:
