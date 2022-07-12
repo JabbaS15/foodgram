@@ -11,7 +11,6 @@ from api.serializers import (
     CreateRecipeSerializer,
     IngredientsSerializer,
     ListRecipeSerializer,
-    SubscriptionsRecipeSerializer,
     TagSerializer
 )
 from api.utils import FilterDataset

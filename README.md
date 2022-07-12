@@ -3,7 +3,18 @@
 ![example workflow](https://github.com/JabbaS15/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 ![django version](https://img.shields.io/badge/Django-3.2.13-green)
 ![python version](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-green)
-## Описание проетка [jabba.ddns.net](http://127.0.0.1:8000/api/):
+## Описание проетка 
+
+## Links:
+- [Foodgramm/](http://84.201.152.128/)
+- [Foodgramm/api/](http://84.201.152.128/api/)
+- [Foodgramm/api/docs/](http://84.201.152.128/api/docs/)
+- [Foodgramm/admin/](http://84.201.152.128/admin/)
+
+## Login and Password superuser:
+- username: jabba
+- email: jabba@jabba.kz
+- password: 12345
 
 ## Tecnhologies:
 - Python 3.7
