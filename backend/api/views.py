@@ -41,7 +41,6 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     """Возвращает из БД и создает рецепты"""
     queryset = Recipe.objects.all()
     permission_classes = [AuthorOrReadOnly | AdminOnly]
-    add_serializer = SubscriptionsRecipeSerializer
     pagination_class = CustomPagination
 
     filterset_class = RecipesFilter

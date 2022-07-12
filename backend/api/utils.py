@@ -27,7 +27,7 @@ class FilterDataset:
         }
         data = dataset[method_date]
         obj = get_object_or_404(self.queryset, id=pk)
-        serializer = self.add_serializer(
+        serializer = self.serializer_class(
             obj, context={'request': self.request})
         obj_exist = data.filter(id=pk).exists()
 

@@ -1,3 +1,4 @@
+from api.pagination import CustomPagination
 from api.serializers import UserSubscriptionSerializer
 from api.utils import FilterDataset
 from rest_framework import status, viewsets
@@ -13,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet, FilterDataset):
     """CRUD user models."""
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    add_serializer = UserSerializer
+    pagination_class = CustomPagination
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)

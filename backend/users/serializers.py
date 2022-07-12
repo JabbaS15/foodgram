@@ -17,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'is_subscribed',
+            'password',
         )
 
         extra_kwargs = {'password': {'write_only': True}}
@@ -52,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
         if value.lower() == 'me':
             raise serializers.ValidationError(
                 f'Имя {value} не может быть использованно')
-        if not value.isaplha():
+        if not value.isalpha():
             raise serializers.ValidationError(
                 'В username допустимы только буквы.'
             )
