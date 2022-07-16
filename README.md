@@ -26,31 +26,31 @@
 
 
 ## Как запустить проект:
-- - Загрузите проект с помощью SSH
+- - Загрузите проект с помощью SSH.
 ```
 git@github.com:JabbaS15/foodgram-project-react.git
 ```
-- Подключиться к вашему серверу:
+- Подключиться к вашему серверу.
 ```
 ssh <server user>@<server IP>
 ```
-- Установите Докер на свой сервер
+- Установите Докер на свой сервер.
 ```
 sudo apt install docker.io
 ```
-- Получить разрешения для docker-compose
+- Получить разрешения для docker-compose.
 ```
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-- Создайте каталог проекта
+- Создайте каталог проекта.
 ```
 mkdir foodgram && cd foodgram/
 ```
-- Создайте env-файл
+- Создайте env-файл.
 ```
 touch .env
 ```
-- Заполните env-файл
+- Заполните env-файл.
 ```
 DEBUG = False
 SECRET_KEY = указываем секретный ключ
@@ -62,11 +62,34 @@ POSTGRES_PASSWORD = пароль для подключения к БД (уста
 DB_HOST = название сервиса (контейнера)
 DB_PORT = порт для подключения к БД
 ```
-- Скопируйте файлы из 'infra/' с ПК на ваш сервер
+- Скопируйте файлы из 'infra/' с ПК на ваш сервер.
 ```
 scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
 ```
-- Запустите docker-compose
+- Запустите docker-compose.
 ```
 sudo docker-compose up -d
 ```
+- Запустите миграции.
+```
+sudo docker-compose exec backend python manage.py migrate --noinput 
+```
+- Запустите сбор статики.
+```
+sudo docker-compose exec backend python manage.py collectstatic --noinput
+```
+- Загрузите данные в базу.
+```
+sudo docker-compose exec backend python manage.py load_csv     
+```
+- Создайте супер пользователя.
+```
+sudo docker-compose exec backend python manage.py createsuperuser
+
+Email: jabba@jabba.kz
+Username: jabba
+First_name:
+Last_name:
+Password: 12345  
+```
+

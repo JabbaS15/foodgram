@@ -71,6 +71,7 @@ class TagAdmin(ModelAdmin):
     search_fields = (
         'name', 'color'
     )
+    prepopulated_fields = {"slug": ("name",)}
 
     save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY

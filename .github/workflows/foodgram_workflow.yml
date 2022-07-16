@@ -71,8 +71,8 @@ jobs:
               sudo docker pull jabbas15/foodgram_frontend:latest
               sudo docker pull jabbas15/foodgram_backend:latest
               sudo docker-compose stop
-              sudo docker rm foodgram_frontend-1
-              sudo docker rm foodgram_backend-1
+              sudo docker rm frontend
+              sudo docker rm backend
               rm .env
               touch .env
               echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
@@ -83,6 +83,7 @@ jobs:
               echo DB_HOST=${{ secrets.DB_HOST }} >> .env
               echo DB_PORT=${{ secrets.DB_PORT }} >> .env
               sudo docker-compose up -d
+
   send_message:
     name: Telegram Message
     runs-on: ubuntu-latest
