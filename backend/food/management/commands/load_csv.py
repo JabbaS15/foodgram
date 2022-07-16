@@ -6,7 +6,7 @@ from food.models import Ingredients
 
 
 class Command(BaseCommand):
-    help = 'Загрузка ингредиентов в базу'
+    help = 'Loading ingredients into the base'
 
     def handle(self, *args, **kwargs):
         ingredient_count = Ingredients.objects.count()
@@ -21,6 +21,6 @@ class Command(BaseCommand):
             [Ingredients(**data) for data in reader]
         )
         if Ingredients.objects.count() > ingredient_count:
-            self.stdout.write(self.style.SUCCESS('Загрузка завершена!'))
+            self.stdout.write(self.style.SUCCESS('Loading is complete!'))
         else:
-            self.stdout.write(self.style.ERROR('Ошибка загрузки!'))
+            self.stdout.write(self.style.ERROR('Loading is error!'))
