@@ -11,7 +11,7 @@ from api.serializers import (
     CreateRecipeSerializer,
     IngredientsSerializer,
     ListRecipeSerializer,
-    TagSerializer
+    TagSerializer, SubscriptionsRecipeSerializer
 )
 from api.utils import FilterDataset
 from food.models import Ingredients, Recipe, Tag
@@ -24,7 +24,8 @@ class TagViewSet(viewsets.ModelViewSet):
     permission_classes = [ReadOnly | AdminOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    lookup_field = 'slug'
+    lookup_field = 'id'
+    # slug
 
 
 class IngredientsViewSet(viewsets.ModelViewSet):
@@ -41,8 +42,8 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     queryset = Recipe.objects.all()
     permission_classes = [AuthorOrReadOnly | AdminOnly]
     pagination_class = CustomPagination
-
     filterset_class = RecipesFilter
+    serializer_class = SubscriptionsRecipeSerializer
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:

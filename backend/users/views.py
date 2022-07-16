@@ -73,15 +73,21 @@ class UserViewSet(viewsets.ModelViewSet, FilterDataset):
     )
     def set_password(self, request):
         """Обновление пароля"""
-        if 'new_password' or 'current_password' not in request.data:
+        if 'new_password' not in request.data:
             return Response(
                 data={'error': [
-                    'поля "new_password" и '
-                    '"current_password" обязательны к заполнению'
+                    'полe "new_password" обязательно к заполнению'
                 ]},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if request.data['new_password'] == request.data['current_password']:
+        if 'current_password' not in request.data:
+            return Response(
+                data={'error': [
+                    'полe "current_password" обязательно к заполнению'
+                ]},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if request.data['new_password'] != request.data['current_password']:
             return Response(
                 data={'error': [
                     "'new_password' и 'current_password' не совпадают"
@@ -92,13 +98,6 @@ class UserViewSet(viewsets.ModelViewSet, FilterDataset):
             return Response(
                 data={
                     'new_password': ['Проверьте правильность ввода']
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if not request.user.check_password(request.data['current_password']):
-            return Response(
-                data={
-                    'current_password': ['Проверьте правильность ввода']
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )

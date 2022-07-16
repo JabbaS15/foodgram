@@ -30,7 +30,6 @@ class FilterDataset:
         serializer = self.serializer_class(
             obj, context={'request': self.request})
         obj_exist = data.filter(id=pk).exists()
-
         if (self.request.method in ('GET', 'POST',)) and not obj_exist:
             data.add(obj)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -50,8 +49,8 @@ class FilterDataset:
         ingredients = RecipeIngredients.objects.filter(
             recipe__in=(user.is_in_shopping_cart.values('id'))
         ).values(
-            ingredient=F('ingredient__name'),
-            measurement_unit=F('ingredient__measurement_unit')).annotate(
+            ingredient=F('ingredients__name'),
+            measurement_unit=F('ingredients__measurement_unit')).annotate(
             amount=Sum('amount')
         )
         filename = f'{user.username}_shopping_list.txt'
@@ -59,10 +58,10 @@ class FilterDataset:
             f'Список покупок для: {user.first_name}'
             f'{datetime.now().strftime("shopping_cart")}'
         )
-        for ingredient in ingredients:
+        for ing in ingredients:
             shopping_list += (
-                f'{ingredient["ingredient"]}: '
-                f'{ingredient["amount"]} {ingredient["measure"]}')
+                f'{ing["ingredient"]}: '
+                f'{ing["amount"]} {ing["measurement_unit"]}')
         response = HttpResponse(
             shopping_list, content_type='text.txt; charset=utf-8')
         response['Content-Disposition'] = f'attachment; filename={filename}'
