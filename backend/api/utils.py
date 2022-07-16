@@ -55,8 +55,8 @@ class FilterDataset:
         )
         filename = f'{user.username}_shopping_list.txt'
         shopping_list = (
-            f'Список покупок для: {user.first_name}'
-            f'{datetime.now().strftime("shopping_cart")}'
+            f'Список покупок для: {user.first_name}\n\n'
+            f'{datetime.now().strftime(" shopping_cart. ")}\n\n'
         )
         for ing in ingredients:
             shopping_list += (
