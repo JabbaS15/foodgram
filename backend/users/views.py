@@ -60,10 +60,11 @@ class UserViewSet(viewsets.ModelViewSet, FilterDataset):
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
         authors = user.is_subscribed.all()
+        pages = self.paginate_queryset(authors)
         serializer = UserSubscriptionSerializer(
-            authors, many=True, context={'request': request}
+            pages, many=True, context={'request': request}
         )
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     @action(
         methods=('POST',),
