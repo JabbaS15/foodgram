@@ -42,6 +42,7 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     queryset = Recipe.objects.all()
     permission_classes = [AuthorOrReadOnly | AdminOnly]
     pagination_class = CustomPagination
+    filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipesFilter
     serializer_class = SubscriptionsRecipeSerializer
 
@@ -92,7 +93,7 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
         return Response(serializer.data)
 
     @action(
-        methods=('GET', 'POST', 'DELETE',),
+        methods=('POST', 'DELETE'),
         detail=True,
         permission_classes=(IsAuthenticated,),
         url_path='favorite'
@@ -102,7 +103,7 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
         return self.obj_favorite_cart_subscribe(request, pk, self.FAVORITE)
 
     @action(
-        methods=('GET', 'POST', 'DELETE',),
+        methods=('GET', 'POST', 'DELETE'),
         detail=True,
         permission_classes=[IsAuthenticated, ],
         url_path='shopping_cart'
@@ -112,7 +113,7 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
         return self.obj_favorite_cart_subscribe(request, pk, self.CART)
 
     @action(
-        methods=['get'],
+        methods=['GET'],
         detail=False,
         permission_classes=[IsAuthenticated, ],
         url_path='download_shopping_cart'
