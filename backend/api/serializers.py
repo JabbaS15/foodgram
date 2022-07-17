@@ -247,10 +247,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         menu_list = []
         instance.tags.clear()
         RecipeIngredients.objects.filter(recipe=instance).all().delete()
-        self.create_tags(
-            validated_data.pop('tags'),
-            instance
-        )
+        tags = validated_data.pop('tags')
+        for tag in tags:
+            instance.tags.add(tag)
         self.create_ingredients(
             validated_data.pop('ingredients'),
             instance,
