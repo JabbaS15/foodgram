@@ -22,8 +22,8 @@ class RecipesFilter(rest_framework.FilterSet):
         queryset=Tag.objects.all()
     )
     author = rest_framework.ModelMultipleChoiceFilter(
-        field_name='author__username',
-        to_field_name='username',
+        field_name='author__id',
+        to_field_name='id',
         queryset=CustomUser.objects.all()
     )
 
