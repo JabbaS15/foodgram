@@ -39,12 +39,32 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 
 class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     """Возвращает из БД и создает рецепты"""
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.select_related('author')
     permission_classes = [AuthorOrReadOnly | AdminOnly]
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipesFilter
     serializer_class = SubscriptionsRecipeSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        user = self.request.user
+        if user.is_anonymous:
+            return queryset
+
+        is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
+        if is_in_shopping in ('1', 'true',):
+            queryset = queryset.filter(cart=user.id)
+        elif is_in_shopping in ('0', 'false',):
+            queryset = queryset.exclude(cart=user.id)
+
+        is_favorited = self.request.query_params.get('is_favorited')
+        if is_favorited in ('1', 'true',):
+            queryset = queryset.filter(favorite=user.id)
+        if is_favorited in ('0', 'false',):
+            queryset = queryset.exclude(favorite=user.id)
+
+        return queryset
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:
