@@ -61,7 +61,7 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
         is_favorited = self.request.query_params.get('is_favorited')
         if is_favorited in ('1', 'true',):
             queryset = queryset.filter(favorite=user.id)
-        if is_favorited in ('0', 'false',):
+        elif is_favorited in ('0', 'false',):
             queryset = queryset.exclude(favorite=user.id)
 
         return queryset
