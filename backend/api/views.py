@@ -39,7 +39,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 
 class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
     """Возвращает из БД и создает рецепты"""
-    queryset = Recipe.objects.select_related('author')
+    queryset = Recipe.objects.all()
     permission_classes = [AuthorOrReadOnly | AdminOnly]
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend, )
