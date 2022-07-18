@@ -88,8 +88,8 @@ sudo docker-compose exec backend python manage.py createsuperuser
 
 Email: jabba@jabba.kz
 Username: jabba
-First_name: jabba
-Last_name: jabba
+First_name: Джабба
+Last_name: Хаттович
 Password: 12345  
 ```
 
