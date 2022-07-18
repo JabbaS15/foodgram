@@ -54,15 +54,15 @@ class RecipesViewSet(viewsets.ModelViewSet, FilterDataset):
 
         is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
         if is_in_shopping in ('1', 'true',):
-            queryset = queryset.filter(cart=user.id)
+            queryset = queryset.filter(is_in_shopping_cart=user.id)
         elif is_in_shopping in ('0', 'false',):
-            queryset = queryset.exclude(cart=user.id)
+            queryset = queryset.exclude(is_in_shopping_cart=user.id)
 
         is_favorited = self.request.query_params.get('is_favorited')
         if is_favorited in ('1', 'true',):
-            queryset = queryset.filter(favorite=user.id)
+            queryset = queryset.filter(is_favorited=user.id)
         elif is_favorited in ('0', 'false',):
-            queryset = queryset.exclude(favorite=user.id)
+            queryset = queryset.exclude(is_favorited=user.id)
 
         return queryset
 
