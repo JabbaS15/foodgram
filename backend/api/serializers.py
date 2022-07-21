@@ -179,8 +179,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
-    def validate_ingredients(self, value):
-        """Проверка ингридиентов"""
+    def validate(self, data):
+        """
+        Проверка ингридиентов
+        к сожалению frontend не ловит ошибки в validate_ingredients
+        """
         ingredients = self.initial_data.get('ingredients')
         ingredients_set = set()
         for ingredient in ingredients:
@@ -191,19 +194,15 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             ingredients_set.add(ingredient['id'])
         if len(ingredients_set) != len(ingredients):
             raise serializers.ValidationError(
-                'Такой ингредиент уже выбран'
-            )
-        return value
+                'Такой ингредиент уже выбран')
+
+        return data
 
     def validate_tags(self, value):
         """Проверка Тэгов"""
         if not value:
             raise serializers.ValidationError(
                 'Нужно выбрать тэг'
-            )
-        if int(self.initial_data.get('cooking_time')) <= 0:
-            raise serializers.ValidationError(
-                'Время не может быть отрицательным'
             )
         tags = self.initial_data.get('tags')
         tags_set = set()
@@ -212,6 +211,13 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         if len(tags_set) != len(tags):
             raise serializers.ValidationError(
                 'Такой тэг уже есть'
+            )
+        return value
+
+    def validate_cooking_time(self, value):
+        if int(self.initial_data.get('cooking_time')) <= 0:
+            raise serializers.ValidationError(
+                'Время не может быть отрицательным'
             )
         return value
 
