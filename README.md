@@ -6,10 +6,10 @@
 ## Описание проетка 
 
 ## Links:
-- [Foodgramm/](http://84.201.152.128/)
-- [Foodgramm/api/](http://84.201.152.128/api/)
-- [Foodgramm/api/docs/](http://84.201.152.128/api/docs/)
-- [Foodgramm/admin/](http://84.201.152.128/admin/)
+- [Foodgram\m/](http://84.201.152.128/)
+- [Foodgram/api/](http://84.201.152.128/api/)
+- [Foodgram/api/docs/](http://84.201.152.128/api/docs/)
+- [Foodgram/admin/](http://84.201.152.128/admin/)
 
 ## Login and Password superuser:
 - username: jabba

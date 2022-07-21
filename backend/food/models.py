@@ -65,18 +65,19 @@ class Recipe(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name='recipes',
-        verbose_name='Автор',
+        verbose_name='Автор'
     )
     name = models.CharField(
         max_length=200,
         verbose_name='Название',
+        unique=True,
     )
     text = models.TextField(
-        verbose_name='Описание'
+        verbose_name='Описание',
     )
     image = models.ImageField(
         verbose_name='Картинка',
-        upload_to='food/',
+        upload_to='food/'
     )
     is_favorited = models.ManyToManyField(
         CustomUser,
@@ -99,7 +100,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Тэг',
-        related_name='recipes',
+        related_name='recipes'
     )
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления',
@@ -142,7 +143,7 @@ class RecipeIngredients(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=[MinValueValidator(1)],
+        validators=[MinValueValidator(1), MaxValueValidator(600)],
     )
 
     class Meta:

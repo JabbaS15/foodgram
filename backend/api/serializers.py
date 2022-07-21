@@ -185,34 +185,34 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         ingredients_set = set()
         for ingredient in ingredients:
             if int(ingredient.get('amount')) <= 0:
-                raise serializers.ValidationError({
-                    'amount': 'Количество не может быть отрицательным'
-                })
+                raise serializers.ValidationError(
+                    'Количество не может быть отрицательным'
+                )
             ingredients_set.add(ingredient['id'])
         if len(ingredients_set) != len(ingredients):
-            raise serializers.ValidationError({
-                'ingredients': 'Такой ингредиент уже выбран'
-            })
+            raise serializers.ValidationError(
+                'Такой ингредиент уже выбран'
+            )
         return value
 
     def validate_tags(self, value):
         """Проверка Тэгов"""
         if not value:
-            raise serializers.ValidationError({
-                'tags': 'Нужно выбрать тэг'
-            })
+            raise serializers.ValidationError(
+                'Нужно выбрать тэг'
+            )
         if int(self.initial_data.get('cooking_time')) <= 0:
-            raise serializers.ValidationError({
-                'cooking_time': 'Время не может быть отрицательным'
-            })
+            raise serializers.ValidationError(
+                'Время не может быть отрицательным'
+            )
         tags = self.initial_data.get('tags')
         tags_set = set()
         for tag in tags:
             tags_set.add(tag)
         if len(tags_set) != len(tags):
-            raise serializers.ValidationError({
-                'tags': 'Такой тэг уже есть'
-            })
+            raise serializers.ValidationError(
+                'Такой тэг уже есть'
+            )
         return value
 
     def create_ingredients(self, ingredients, recipe, menu_list):

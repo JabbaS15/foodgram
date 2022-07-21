@@ -7,7 +7,8 @@ EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 class IngredientInline(TabularInline):
     model = RecipeIngredients
-    extra = 2
+    extra = 0
+    min_num = 1
 
 
 @register(RecipeIngredients)
@@ -40,8 +41,9 @@ class RecipeAdmin(ModelAdmin):
         ('name', 'cooking_time',),
         ('author', 'tags',),
         ('text',),
+        ('image',),
     )
-    raw_id_fields = ('author', )
+    raw_id_fields = ('author',)
     search_fields = (
         'name',
         'author',
