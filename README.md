@@ -44,7 +44,7 @@
 ## Инструкция по развёртыванию:
 1. Загрузите проект.
 ```
-https://github.com/JabbaS15/foodgram.git
+git clone https://github.com/JabbaS15/foodgram.git
 ```
 2. Подключиться к вашему серверу.
 ```
