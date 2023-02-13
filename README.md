@@ -42,9 +42,9 @@
 | Получение списока ингредиентов в формате pdf|`.../api/recipes/download_shopping_cart`| GET |
 
 ## Инструкция по развёртыванию:
-1. Загрузите проект с помощью SSH.
+1. Загрузите проект.
 ```
-git@github.com:JabbaS15/foodgram-project-react.git
+https://github.com/JabbaS15/hw05_final.git
 ```
 2. Подключиться к вашему серверу.
 ```
