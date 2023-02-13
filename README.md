@@ -13,7 +13,7 @@
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat&logo=Yandex.Cloud&logoColor=ffffff&color=043A6B)](https://cloud.yandex.ru/)
 
 #### Статус проекта:
-![example workflow](https://github.com/JabbaS15/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+![example workflow](https://github.com/JabbaS15/foodgram/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 ## Описание проекта:
 Это продуктовый помощник, онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
@@ -44,7 +44,7 @@
 ## Инструкция по развёртыванию:
 1. Загрузите проект.
 ```
-https://github.com/JabbaS15/hw05_final.git
+https://github.com/JabbaS15/foodgram.git
 ```
 2. Подключиться к вашему серверу.
 ```
